@@ -62,16 +62,15 @@ namespace ConditionsExample {
 
         void InitializePivot(int pivotIndex, string expression, string name) {
             PivotGridControl pivot = pivotGridControls[pivotIndex];
-
+            
             pivot.BeginUpdate();
+            pivot.OptionsData.DataProcessingEngine = PivotDataProcessingEngine.Optimized;
             pivot.Fields.Clear();
             pivot.Fields.Add(GetField("Name", "fieldName", PivotArea.RowArea));
             pivot.Fields.Add(GetField("Field1", Field1Name, PivotArea.DataArea));
             pivot.Fields.Add(GetField("Field2", Field2Name, PivotArea.DataArea));
             pivot.Fields.Add(GetField("Date", "fieldDate", PivotArea.ColumnArea));
             pivot.DataSource = GetDataView();
-            pivot.OptionsData.DataFieldUnboundExpressionMode = 
-                DataFieldUnboundExpressionMode.UseSummaryValues;
             pivot.EndUpdate();
 
             if (string.IsNullOrEmpty(name)) {
@@ -84,7 +83,9 @@ namespace ConditionsExample {
         }
 
         PivotGridField GetField(string fieldName, string name, PivotArea area) {
-            PivotGridField field = new PivotGridField(fieldName, area);
+            PivotGridField field = new PivotGridField();
+            field.DataBinding = new DataSourceColumnBinding(fieldName);
+            field.Area = area;
             field.Name = name;
             return field;
         }

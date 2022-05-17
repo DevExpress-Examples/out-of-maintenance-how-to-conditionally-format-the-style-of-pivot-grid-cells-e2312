@@ -64,13 +64,13 @@ Namespace ConditionsExample
 			Dim pivot As PivotGridControl = pivotGridControls(pivotIndex)
 
 			pivot.BeginUpdate()
+			pivot.OptionsData.DataProcessingEngine = PivotDataProcessingEngine.Optimized
 			pivot.Fields.Clear()
 			pivot.Fields.Add(GetField("Name", "fieldName", PivotArea.RowArea))
 			pivot.Fields.Add(GetField("Field1", Field1Name, PivotArea.DataArea))
 			pivot.Fields.Add(GetField("Field2", Field2Name, PivotArea.DataArea))
 			pivot.Fields.Add(GetField("Date", "fieldDate", PivotArea.ColumnArea))
 			pivot.DataSource = GetDataView()
-			pivot.OptionsData.DataFieldUnboundExpressionMode = DataFieldUnboundExpressionMode.UseSummaryValues
 			pivot.EndUpdate()
 
 			If String.IsNullOrEmpty(name) Then
@@ -83,7 +83,9 @@ Namespace ConditionsExample
 		End Sub
 
 		Private Function GetField(ByVal fieldName As String, ByVal name As String, ByVal area As PivotArea) As PivotGridField
-			Dim field As New PivotGridField(fieldName, area)
+			Dim field As New PivotGridField()
+			field.DataBinding = New DataSourceColumnBinding(fieldName)
+			field.Area = area
 			field.Name = name
 			Return field
 		End Function
